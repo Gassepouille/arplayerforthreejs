@@ -6,7 +6,7 @@ var THREEx = THREEx || {}
 THREEx.JsArucoMarker = function(){
 	var _this = this
 
-	this.debugEnabled = true
+	this.debugEnabled = false
 	this.videoScaleDown = 2
 	this.modelSize = 35.0 // millimeter
 
@@ -82,7 +82,8 @@ THREEx.JsArucoMarker = function(){
 		// compute the pose from the canvas
 		var posit = new POS.Posit(this.modelSize, canvasElement.width);
 		var pose = posit.pose(corners);
-		console.assert(pose !== null)
+		// console.assert(pose !== null)
+		if( pose === null )	return;
 
 		//////////////////////////////////////////////////////////////////////////////////
 		//		Translate pose to THREE.Object3D

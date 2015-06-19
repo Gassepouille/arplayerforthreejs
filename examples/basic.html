@@ -15,7 +15,38 @@
 <script src='../src/threex.videograbbing.js'></script>
 <script src='../src/threex.jsarucomarker.js'></script>
 
-<body style='margin: 0px; overflow: hidden; text-align:center;'><script>
+<body style='margin: 0px; overflow: hidden; text-align:center;'>
+
+<div id='info' style='position: absolute; top: 0px; width: 100%;font-family:arial; font-weight: bolder; padding-top: 5px;'>
+	Augmented Reality with <a href="http://threejs.org" target="_blank">three.js</a>
+	- works on desktop and mobile
+	- require <a href='https://get.webgl.org/'>WebGL</a> and <a href='http://caniuse.com/#feat=stream'>getUserMedia</a> Support
+	<br/>
+	Source:
+	<a class='webcam' href='javascript:void();'>webcam</a> -
+	<a class='image'  href='javascript:void();'>image</a> -
+	<a class='video'  href='javascript:void();'>video</a>
+</div>
+
+<script>
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Handle ui button
+	//////////////////////////////////////////////////////////////////////////////////
+	document.querySelector('#info .webcam').addEventListener('click', function(event){
+		location.hash	= '#webcam'
+		location.reload()
+	})
+
+	document.querySelector('#info .image').addEventListener('click', function(event){
+		location.hash	= '#image'
+		location.reload()
+	})
+
+	document.querySelector('#info .video').addEventListener('click', function(event){
+		location.hash	= '#video'
+		location.reload()
+	})
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Init
 	//////////////////////////////////////////////////////////////////////////////////
@@ -40,20 +71,6 @@
 	//		add an object in the scene
 	//////////////////////////////////////////////////////////////////////////////////
 
-	// add a rotating earth to the scene
-	;(function(){
-return
-		var geometry = new THREE.SphereGeometry(0.5, 32, 16, Math.PI)
-		var material = new THREE.MeshBasicMaterial( {
-			map: THREE.ImageUtils.loadTexture("images/earth.jpg")
-		})
-		var mesh = new THREE.Mesh(geometry, material);
-		scene.add( mesh );
-		onRenderFcts.push(function(now, delta){
-			mesh.rotation.x += 0.1 * delta/1000 * Math.PI
-		})
-	})()
-
 	// add some debug display
 	;(function(){
 		var geometry = new THREE.PlaneGeometry(1,1,10,10)
@@ -69,17 +86,14 @@ return
 
 	// add a awesome logo to the scene
 	;(function(){
-// return
 		var material = new THREE.SpriteMaterial({
 			map: THREE.ImageUtils.loadTexture( 'images/awesome.png' ),
 		});
-		material.map.minFilter = THREE.LinearFilter
 		var geometry = new THREE.BoxGeometry(1,1,1)
 		var object3d = new THREE.Sprite(material );
-		object3d.scale.set( 1, 1, 1 );
+		object3d.scale.set( 2, 2, 1 );
 		scene.add(object3d)
 	})()
-
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the whole thing on the page
@@ -110,7 +124,7 @@ return
 			onRenderFct(now, now - previousTime)
 		})
 
-		previousTime	= nowMsec
+		previousTime	= now
 	})
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -121,14 +135,17 @@ return
 	// init the marker recognition
 	var jsArucoMarker	= new THREEx.JsArucoMarker()
 
+	// if no specific image source is specified, take the webcam by default
+	if( location.hash === '' )	location.hash = '#webcam'
+
 	// init the image source grabbing
-	if( false ){
+	if( location.hash === '#video' ){
 		var videoGrabbing = new THREEx.VideoGrabbing()
 		jsArucoMarker.videoScaleDown = 10
-	}else if( true ){
+	}else if( location.hash === '#webcam' ){
 		var videoGrabbing = new THREEx.WebcamGrabbing()
 		jsArucoMarker.videoScaleDown = 2
-	}else if( true ){
+	}else if( location.hash === '#image' ){
 		var videoGrabbing = new THREEx.ImageGrabbing()
 		jsArucoMarker.videoScaleDown = 10
 	}else console.assert(false)
@@ -146,7 +163,8 @@ return
 
 		// see if this.markerId has been found
 		markers.forEach(function(marker){
-			if( marker.id !== 265 )	return
+
+			// if( marker.id !== 265 )	return
 
 			jsArucoMarker.markerToObject3D(marker, object3d)
 

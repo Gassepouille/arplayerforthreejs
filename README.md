@@ -1,56 +1,44 @@
-# Augmented Reality Player For Three.js
+# Augmented Reality For Three.js
 
-# What Is It ?
-- This is a 'ar player for three.js'
-- Run the apps on a phone or on a desktop (run on nexus 6)
-- When a marker is reconized, take its id
-- Display the three.js scene of this id
-- This scene is to be edited by the three.js editor
+This demo shows how to get augmented reality using only web technologies.
 
----
+# How To Run The Demo ?
+- put a browser http://jeromeetienne.github.io/arplayerforthreejs/examples/basic.html
+- it will read your webcam using [getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getUserMedia)
+  - if it asks for permission, allow it :)
+- it will recognize the marker you put in front of the mcamera
+  - get the marker from [here](http://jeromeetienne.github.io/arplayerforthreejs/marker/image-marker-265.html)
+  - you can print it and point the camera toward the paper
+  - or you can load the marker web page and put the phone in front of the camera
 
-# TODO
-- the goal is what ? to produce examples of AR with markers
-- ultimatly it is a phone webapps
-  - support gradual degradation
-  - with dual screen or not ?
-  - with gyro controls or not ?
-  - with environment camera or only face ?
-- we use jsaruco to implement it, but it should be almost not important
-  - the important is the feature
-  - the feature is to be able to recognize and position the marker
-  - it is made on a live video stream from getUserMedia
-- stuff to debug
-- stuff to look shiny
+# Supported Devices
+- It should run on any web browser which support
+[WebGL](http://caniuse.com/#feat=webgl)
+and
+[getUserMedia](http://caniuse.com/#feat=stream)
+- It runs on desktop and mobiles.
+- modern phones, such as nexus 6/9, are powerfull enougth to run it
+- unfortunatly ios browser still lack support
+  for [getUserMedia](http://caniuse.com/#feat=stream), so iphone and ipads can't play :(
 
+# Show Don't Tell
+* [examples/basic.html](http://jeromeetienne.github.io/arplayerforthreejs/examples/basic.html)
+\[[view source](https://github.com/jeromeetienne/arplayerforthreejs/blob/master/examples/basic.html)\] :
+It shows a basic augmented reality webapp. Good to learn how to use the code. Perfect start point.
+* [examples/data-visualization-histogram3d.html](http://jeromeetienne.github.io/arplayerforthreejs/examples/data-visualization-histogram3d.html)
+\[[view source](https://github.com/jeromeetienne/arplayerforthreejs/blob/master/examples/data-visualization-histogram3d.html)\] :
+It shows a possible data visualisation with 3d histogram. You can change the value the way you like. You can get them from a REST API, or from an industrial sensor, what ever you want.
+* [examples/contact-sharing-in-ar.html](http://jeromeetienne.github.io/arplayerforthreejs/examples/contact-sharing-in-ar.html)
+\[[view source](https://github.com/jeromeetienne/arplayerforthreejs/blob/master/examples/contact-sharing-in-ar.html)\] :
+It shows how to display informations on a per-marker basis. 
+There is a database which contains the informations. When the proper marker is recognized, the info specific to this marker is displayed. In this example, we provide a contact sharing webapp. Everybody got his own marker. Suppose alice wears a specific marker. Bob load the apps on his mobile, and will see alice contact information when he point it to alice.
 
-# Ideal App
-- full screen video
-- marker reconized
-- 3d scene appearing on top
+# threex.jsArucoMarker.js
+It recognizes the marker in a video stream.
+It is then positioned in 3d.
+You just have to apply that to your own three.js meshes.
 
-# How to make this code flexible and reusable
-- could be a nice cooked library
-- delimit the scope the application and of the library
-- various parts
-  - marker recognition
-  - video grabbing
-  - display the 3d scene
-  - display the video and the 3d together
-- the user will comes from three.js
-  - so the base code will be there
-  - the library should provide easy interface for them
-
----
-
-# Software Architecture
-- dev should
-  - provide renderer, scene
-- library should
-  - display video behind canvas at the proper location
-  - recognize marker in the video
-  - render the scene from the developper at the proper location
-  - notify the developper when the marker is visible or not
-
-- unsure how to merge them together
-- no need to. just split the code in a nice fashion
+# threex.webcamgrabbing.js
+It handles the video grabbing. 
+It will take the environment camera if it is available. 
+It provides a nice see-through effect.
