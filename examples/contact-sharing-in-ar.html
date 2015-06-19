@@ -49,6 +49,7 @@
 			role            : 'industry',
 			markerId	: 0,
 			avatar	        : '/examples/contact-sharing-in-ar/avatars/avatar-0.jpg',
+			url	        : 'http://www.daqri.com',
 		},
 		{
 			firstName	: 'Adam',
@@ -56,6 +57,7 @@
 			role            : 'corporate',
 			markerId	: 1,
 			avatar	        : '/examples/contact-sharing-in-ar/avatars/avatar-1.jpg',
+			url	        : 'http://www.google.com',
 		},
 		{
 			firstName	: 'Albert',
@@ -63,6 +65,7 @@
 			role            : 'designer',
 			markerId	: 265,
 			avatar	        : '/examples/contact-sharing-in-ar/avatars/avatar-265.jpg',
+			url	        : 'http://www.twitter.com',
 		},
 	]
 
@@ -73,7 +76,6 @@
 	// Add Badge
 	var badgeSprite = new UI.BadgeSprite();
 	scene.add(badgeSprite)
-
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the whole thing on the page
@@ -163,7 +165,34 @@
 
 			jsArucoMarker.markerToObject3D(marker, object3d)
 
+			object3d.lookAt(camera.position)
 			object3d.visible = true;
 		})
 	});
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Click event
+	//////////////////////////////////////////////////////////////////////////////////
+	document.addEventListener( 'click', onMouseClick, false );
+
+	var objects = [badgeSprite]
+	function onMouseClick( e ) {
+		e.preventDefault();
+		var mouse = new THREE.Vector2();
+		mouse.x = ( event.clientX / renderer.domElement.width ) * 2 - 1;
+		mouse.y = - ( event.clientY / renderer.domElement.height ) * 2 + 1;
+		var raycaster = new THREE.Raycaster();
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObjects( objects );
+		for( var i = 0; i < intersects.length; i++ ) {
+			var intersection = intersects[ i ],
+			obj = intersection.object;
+			if(obj.badgeId===undefined) return;
+			badgeInfos.forEach(function(item){
+				if( item.markerId !== obj.badgeId )	return
+				window.open(item.url);
+			})
+		}
+	}
+
 </script></body>

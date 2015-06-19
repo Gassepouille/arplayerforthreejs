@@ -27,24 +27,26 @@ UI.BadgeSprite        = function(){
 	var texture	= new THREE.Texture(canvas)
 	this.texture	= texture
 
-
-        // Create the object
-        var material = new THREE.SpriteMaterial({
+        var geometry = new THREE.PlaneGeometry( 2, 1 );
+        var material = new THREE.MeshBasicMaterial( {
                 transparent: true,
                 map     : texture
-        });
-        THREE.Sprite.call( this, material )
+        } );
+        THREE.Mesh.call( this,geometry, material );
 
-        this.scale.set(2,1,1)
 }
 
-UI.BadgeSprite.prototype = Object.create( THREE.Sprite.prototype );
+// UI.BadgeSprite.prototype = Object.create( THREE.Sprite.prototype );
+UI.BadgeSprite.prototype = Object.create( THREE.Mesh.prototype );
 
 /**
  * Draw the cartouche
  * @param  {Object} params [description]
  */
 UI.BadgeSprite.prototype.draw = function(params){
+        // Store BadgeId in THREEJS Object for click
+        this.badgeId = params.markerId;
+
 	var context	= this.context
 	var canvas	= this.canvas
         var texture     = this.texture
